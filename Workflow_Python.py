@@ -6,6 +6,7 @@ import arcinfo
 import arcpy
 
 
+
 # Local variables:
 GIS101DELIVERY_RESTRICTED_DBO_BOUND_ADMIN_HOLDINGS__2_ = "GIS101DELIVERY_RESTRICTED.DBO.BOUND_ADMIN_HOLDINGS"
 GIS101DELIVERY_RESTRICTED_DBO_BOUND_ADMIN_HOLDINGS__3_ = GIS101DELIVERY_RESTRICTED_DBO_BOUND_ADMIN_HOLDINGS__2_
@@ -18,6 +19,10 @@ Erased_Feature = "C:\\Users\\hawkinle\\Desktop\\STDTAS\\Workflow\\Data\\Workflow
 Point_shp = "C:\\Users\\hawkinle\\Desktop\\STDTAS\\Workflow\\Data\\Point.shp"
 Buffer_600 = "C:\\Users\\hawkinle\\Desktop\\STDTAS\\Workflow\\Data\\Workflow.gdb\\Buffer_600"
 No_Bait_zone = "C:\\Users\\hawkinle\\Desktop\\STDTAS\\Workflow\\Data\\Workflow.gdb\\No_Bait_zone"
+GIS101DELIVERY_RESTRICTED_DBO_LAND_OWN_PROPERTY = "C:\\Database_connections\\GIS101Delivery_Restricted.sde\\GIS101DELIVERY_RESTRICTED.DBO.LAND_OWN_PROPERTY"
+LAND_OWN_PROPERTY_Clip = "C:\\Users\\hawkinle\\Documents\\ArcGIS\\Default.gdb\\LAND_OWN_PROPERTY_Clip"
+LAND_OWN_PROPERTY_Clip_Disso = "C:\\Users\\hawkinle\\Documents\\ArcGIS\\Default.gdb\\LAND_OWN_PROPERTY_Clip_Disso"
+Erased_Feature_Guras = "C:\\Users\\hawkinle\\Desktop\\STDTAS\\Workflow\\Data\\Workflow.gdb\\Erased_Feature_Guras"
 
 # Process: Select Layer By Attribute
 arcpy.SelectLayerByAttribute_management(GIS101DELIVERY_RESTRICTED_DBO_BOUND_ADMIN_HOLDINGS__2_, "NEW_SELECTION", "Holding_Reference_Number = 108091786")
@@ -42,3 +47,13 @@ arcpy.Buffer_analysis(Point_shp, Buffer_600, "600 Meters", "FULL", "ROUND", "NON
 
 # Process: Clip
 arcpy.Clip_analysis(Selected_Holding, Buffer_600, No_Bait_zone, "")
+
+# Process: Clip (2)
+arcpy.Clip_analysis(GIS101DELIVERY_RESTRICTED_DBO_LAND_OWN_PROPERTY, Buffer_1000, LAND_OWN_PROPERTY_Clip, "")
+
+# Process: Dissolve
+arcpy.Dissolve_management(LAND_OWN_PROPERTY_Clip, LAND_OWN_PROPERTY_Clip_Disso, "GEO_LOCN_ID", "", "MULTI_PART", "DISSOLVE_LINES")
+
+# Process: Erase (2)
+arcpy.Erase_analysis(LAND_OWN_PROPERTY_Clip_Disso, Selected_Holding, Erased_Feature_Guras, "")
+
